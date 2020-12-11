@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<!--
+-->
+<launch>
+ 
+  <arg name="world_name" default="$(find husky_highlevel_controller)/worlds/singlePillar.world"/>
+ 
+  <arg name="laser_enabled" default="true"/>
+  <arg name="realsense_enabled" default="false"/>
+ 
+  <include file="$(find gazebo_ros)/launch/empty_world.launch">
+    <arg name="world_name" value="$(arg world_name)"/> 
+    <arg name="paused" value="false"/>
+    <arg name="use_sim_time" value="true"/>
+    <arg name="gui" value="true"/>
+    <arg name="headless" value="false"/>
+    <arg name="debug" value="false"/>
+  </include>
+ 
+  <include file="$(find husky_gazebo)/launch/spawn_husky.launch">
+    <arg name="laser_enabled" value="$(arg laser_enabled)"/>
+    <arg name="realsense_enabled" value="$(arg realsense_enabled)"/>
+  </include>
+ 
+   <node pkg="husky_highlevel_controller" type="husky_highlevel_controller" name="husky_highlevel_controller" output="screen" launch-prefix="gnome-terminal --command">
+
+   <rosparam command="load" file="$(find husky_highlevel_controller)/config/config.yaml"/>
+  </node>
+
+   <node name="rviz" pkg="rviz" type="rviz" args="-d $(find husky_viz)/rviz/robot.rviz" output="screen"/>
+
+
+</launch>
